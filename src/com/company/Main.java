@@ -1,9 +1,13 @@
 package com.company;
 
+
+import com.company.Players.User;
+
 public class Main {
 
     public static void main(String[] args) {
-        Sea sea = new Sea();
-        sea.showForOwner();
+        User user = new User();
+        user.sea.showForOwner();
+        user.setShips();
     }
 }

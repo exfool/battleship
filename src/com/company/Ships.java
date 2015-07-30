@@ -1,22 +1,15 @@
 package com.company;
 
-import com.company.Points.Piece;
-
 /**
  * Created by exfool on 28.07.15.
  */
 public class Ships {
     private int decks;
-    public Piece[] pieces;
     private int health;
 
     public Ships(int decks) {
         this.decks = decks;
-        // init pieces of ship
-        pieces = new Piece[decks];
-        for (int i = 0; i < decks; i++) {
-            pieces[i] = new Piece(GameController.generateId(), this, i);
-        }
+        this.health = decks;
     }
 
     public boolean hit() {
@@ -32,10 +25,6 @@ public class Ships {
             return true;
         }
         return false;
-    }
-
-    public Piece getPiece(int number) {
-        return pieces[number];
     }
 
     public int getDecks() {
