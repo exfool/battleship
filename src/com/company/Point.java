@@ -30,11 +30,15 @@ public class Point {
      * 4 - it's destroyed a simple point
      * 5 - statement if ship is dead
      **/
-    public int hit() {
+    public int hit(Sea sea) {
         if (parent != null) {
-            if (health) {
+            if (this.health) {
+                this.health = false;
+                sea.mHealth();
                 parent.hit();
-                health = false;
+                if(!parent.check()){
+                    return 5;
+                }
                 return 1;
             } else {
                 if (parent.check()) {
@@ -44,7 +48,7 @@ public class Point {
                 }
             }
         } else {
-            if (health) {
+            if (this.health) {
                 health = false;
                 return 3;
             } else {
@@ -61,7 +65,7 @@ public class Point {
     public int check() {
         if (parent != null) {
 
-            if (health) {
+            if (this.health) {
                 return 1;
             } else {
                 if (parent.check()) {
@@ -73,7 +77,7 @@ public class Point {
 
         } else {
 
-            if (health) {
+            if (this.health) {
                 return 3;
             } else {
                 return 4;
@@ -97,7 +101,7 @@ public class Point {
                 System.out.print("* ");
                 break;
             case 5:
-                System.out.print("o ");
+                System.out.print("T ");
                 break;
         }
     }
@@ -117,7 +121,7 @@ public class Point {
                 System.out.print("* ");
                 break;
             case 5:
-                System.out.print("o ");
+                System.out.print("T ");
                 break;
         }
     }

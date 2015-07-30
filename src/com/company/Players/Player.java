@@ -1,6 +1,5 @@
 package com.company.Players;
 
-import com.company.Point;
 import com.company.Sea;
 import com.company.Ships;
 
@@ -9,7 +8,6 @@ import com.company.Ships;
  */
 public abstract class Player {
     protected Ships[] ships;
-    protected Point pieces;
     public Sea sea;
 
     public Player() {
@@ -22,7 +20,7 @@ public abstract class Player {
     /**
      * Step in game
      */
-    public abstract boolean move();
+    public abstract boolean move(Player who);
 
 
     public Ships[] getShips() {

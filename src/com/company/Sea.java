@@ -5,7 +5,10 @@ package com.company;
  */
 public class Sea {
     private Point[][] xy = new Point[12][12];
+    private int health = 20;
 
+    public Sea() {
+    }
 
     /**
      * Set sheep on X, Y coordinate, if success return true
@@ -27,7 +30,7 @@ public class Sea {
 
         // out of range
         if (x > 10 || y > 10 || x < 1 || y < 1) {
-            Log.set("Out of range");
+            //Log.set("Out of range");
             return false;
         }
 
@@ -76,13 +79,23 @@ public class Sea {
         }
         if (isVertical) {
             xy[x - 1][y] = new Point();
-            xy[x + ship.getDecks() ][y] = new Point();
+            xy[x + ship.getDecks()][y] = new Point();
         } else {
             xy[x][y - 1] = new Point();
-            xy[x][y + ship.getDecks()+1] = new Point();
+            xy[x][y + ship.getDecks()] = new Point();
         }
 
         return true;
+    }
+
+    public void initPoints() {
+        for (int i = 1; i < 11; i++) {
+            for (int j = 1; j < 11; j++) {
+                if (xy[i][j] == null) {
+                    xy[i][j] = new Point();
+                }
+            }
+        }
     }
 
     public int hit(int x, int y) {
@@ -91,24 +104,50 @@ public class Sea {
             return -1;
         }
 
-        return xy[x][y].hit();
+        return xy[x][y].hit(this);
     }
 
     public void showForOwner() {
+        System.out.println("   1 2 3 4 5 6 7 8 9 10");
         for (int i = 1; i < 11; i++) {
+            if (i != 10) {System.out.print(i + "  ");} else {System.out.print(i + " "); } ;
             for (int j = 1; j < 11; j++) {
-                if(xy[i][j] != null){xy[i][j].printForOwner();}
+                if (xy[i][j] != null) {
+                    xy[i][j].printForOwner();
+                } else {
+                    System.out.print("/ ");
+                }
             }
             System.out.println();
         }
+        System.out.println();
     }
 
     public void showForEnemy() {
+        System.out.println("   1 2 3 4 5 6 7 8 9 10");
         for (int i = 1; i < 11; i++) {
+            if (i != 10) {System.out.print(i + "  ");} else {System.out.print(i + " "); } ;
             for (int j = 1; j < 11; j++) {
-                if(xy[i][j] != null){xy[i][j].printForOwner();}
+                if (xy[i][j] != null) {
+                    xy[i][j].printForEnemy();
+                } else {
+                    System.out.print("/ ");
+                }
             }
             System.out.println();
         }
+        System.out.println();
+    }
+
+    public boolean checkHealth() {
+        if (this.health > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void mHealth() {
+        this.health -= 1;
     }
 }

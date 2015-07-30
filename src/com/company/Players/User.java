@@ -1,6 +1,5 @@
 package com.company.Players;
 
-import com.company.Players.Player;
 import com.company.Ships;
 
 import java.util.Scanner;
@@ -12,7 +11,6 @@ public class User extends Player {
 
     public User() {
         super();
-
     }
 
     @Override
@@ -40,22 +38,32 @@ public class User extends Player {
                 flag = sea.setShip(ship, y, x, isVertical);
             } while (!flag);
         }
+        sea.initPoints();
     }
 
-    public boolean move(){
+    private int inputWithSave(){
         Scanner in = new Scanner(System.in);
+        String so = in.nextLine();
+        if(so == "save"){
+            System.out.println("Game is saved");
+            return -1;
+        }
+        return Integer.valueOf(so);
+    }
+
+    public boolean move(Player who){
         do{
             System.out.println("Enter X:");
-            int x = in.nextInt();
+            int x = inputWithSave();
             System.out.println("Enter Y:");
-            int y = in.nextInt();
+            int y = inputWithSave();
 
-            int status = super.sea.hit(x, y);
+            int status = who.sea.hit(x, y);
             if (status == 1) {
                 return true;
             }
             if(status != -1){
-                return false;
+                return true;
             }
         }while (true);
     }
