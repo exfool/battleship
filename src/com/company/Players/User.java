@@ -1,13 +1,15 @@
 package com.company.Players;
 
+import com.company.Log;
 import com.company.Ships;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 /**
  * Created by exfool on 28.07.15.
  */
-public class User extends Player {
+public class User extends Player implements Serializable {
 
     public User() {
         super();
@@ -27,7 +29,7 @@ public class User extends Player {
                 int y = in.nextInt();
                 System.out.println("Enter is position ship (1-vertical, 2- horizontal):");
                 boolean isVertical;
-                switch (in.nextInt()){
+                switch (in.nextInt()) {
                     case 1:
                         isVertical = true;
                         break;
@@ -41,30 +43,36 @@ public class User extends Player {
         sea.initPoints();
     }
 
-    private int inputWithSave(){
+    private int inputWithSave() {
         Scanner in = new Scanner(System.in);
         String so = in.nextLine();
-        if(so == "save"){
+        if (so == "save") {
             System.out.println("Game is saved");
             return -1;
         }
         return Integer.valueOf(so);
     }
 
-    public boolean move(Player who){
-        do{
+    public boolean move(Player who) {
+        do {
+            Log.set("Sea of 1 player");
+            who.sea.showForEnemy();
             System.out.println("Enter X:");
             int x = inputWithSave();
             System.out.println("Enter Y:");
             int y = inputWithSave();
 
-            int status = who.sea.hit(x, y);
-            if (status == 1) {
-                return true;
+            int status = who.sea.hit(y, x);
+            switch (status) {
+                case -1:
+                case 2:
+                case 4:
+                case 5:
+                case 1:
+                    return true;
+                case 3:
+                    return false;
             }
-            if(status != -1){
-                return true;
-            }
-        }while (true);
+        } while (true);
     }
 }

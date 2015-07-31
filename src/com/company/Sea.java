@@ -1,9 +1,11 @@
 package com.company;
 
+import java.io.Serializable;
+
 /**
  * Created by exfool on 28.07.15.
  */
-public class Sea {
+public class Sea implements Serializable {
     private Point[][] xy = new Point[12][12];
     private int health = 20;
 
@@ -36,11 +38,11 @@ public class Sea {
 
         // check lenght of ship and size sea
         if (isVertical) {
-            if ((ship.getDecks() + x) > 10) {
+            if ((ship.getDecks() + x) > 11) {
                 return false;
             }
         } else {
-            if ((ship.getDecks() + y) > 10) {
+            if ((ship.getDecks() + y) > 11) {
                 return false;
             }
         }
@@ -68,21 +70,74 @@ public class Sea {
         }
 
         //set points around the ship
+        Point around;
         for (int i = -1; i < ship.getDecks() + 1; i++) {
             if (isVertical) {
-                xy[x + i][y + 1] = new Point();
-                xy[x + i][y - 1] = new Point();
+                if (xy[x + i][y + 1] == null) {
+                    around = new Point();
+                    ship.addAround(around);
+                    xy[x + i][y + 1] = around;
+                } else {
+                    ship.addAround(xy[x + i][y + 1]);
+                }
+
+                if (xy[x + i][y - 1] == null) {
+                    around = new Point();
+                    ship.addAround(around);
+                    xy[x + i][y - 1] = around;
+                } else {
+                    ship.addAround(xy[x + i][y - 1]);
+                }
             } else {
-                xy[x - 1][y + i] = new Point();
-                xy[x + 1][y + i] = new Point();
+                if (xy[x - 1][y + i] == null) {
+                    around = new Point();
+                    ship.addAround(around);
+                    xy[x - 1][y + i] = around;
+                } else {
+                    ship.addAround(xy[x - 1][y + i]);
+                }
+
+                if (xy[x + 1][y + i] == null) {
+                    around = new Point();
+                    ship.addAround(around);
+                    xy[x + 1][y + i] = around;
+                } else {
+                    ship.addAround(xy[x + 1][y + i]);
+                }
             }
         }
         if (isVertical) {
-            xy[x - 1][y] = new Point();
-            xy[x + ship.getDecks()][y] = new Point();
+            if (xy[x - 1][y] == null) {
+                around = new Point();
+                ship.addAround(around);
+                xy[x - 1][y] = around;
+            } else {
+                ship.addAround(xy[x - 1][y]);
+            }
+
+            if (xy[x + ship.getDecks()][y] == null) {
+                around = new Point();
+                ship.addAround(around);
+                xy[x + ship.getDecks()][y] = around;
+            } else {
+                ship.addAround(xy[x + ship.getDecks()][y]);
+            }
         } else {
-            xy[x][y - 1] = new Point();
-            xy[x][y + ship.getDecks()] = new Point();
+            if (xy[x][y - 1] == null) {
+                around = new Point();
+                ship.addAround(around);
+                xy[x][y - 1] = around;
+            } else {
+                ship.addAround(xy[x][y - 1]);
+            }
+
+            if (xy[x][y + ship.getDecks()] == null) {
+                around = new Point();
+                ship.addAround(around);
+                xy[x][y + ship.getDecks()] = around;
+            } else {
+                ship.addAround(xy[x][y + ship.getDecks()]);
+            }
         }
 
         return true;
@@ -110,7 +165,11 @@ public class Sea {
     public void showForOwner() {
         System.out.println("   1 2 3 4 5 6 7 8 9 10");
         for (int i = 1; i < 11; i++) {
-            if (i != 10) {System.out.print(i + "  ");} else {System.out.print(i + " "); } ;
+            if (i != 10) {
+                System.out.print(i + "  ");
+            } else {
+                System.out.print(i + " ");
+            }
             for (int j = 1; j < 11; j++) {
                 if (xy[i][j] != null) {
                     xy[i][j].printForOwner();
@@ -126,7 +185,12 @@ public class Sea {
     public void showForEnemy() {
         System.out.println("   1 2 3 4 5 6 7 8 9 10");
         for (int i = 1; i < 11; i++) {
-            if (i != 10) {System.out.print(i + "  ");} else {System.out.print(i + " "); } ;
+            if (i != 10) {
+                System.out.print(i + "  ");
+            } else {
+                System.out.print(i + " ");
+            }
+            ;
             for (int j = 1; j < 11; j++) {
                 if (xy[i][j] != null) {
                     xy[i][j].printForEnemy();

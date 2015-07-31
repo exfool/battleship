@@ -2,6 +2,7 @@ package com.company.Players;
 
 import com.company.Ships;
 
+import java.io.Serializable;
 import java.util.Random;
 import java.util.Stack;
 
@@ -11,7 +12,7 @@ import java.util.Stack;
  */
 
 
-public class Bot extends Player {
+public class Bot extends Player implements Serializable {
     private Stack success = new Stack();
     private Stack theory = new Stack();
 
@@ -25,20 +26,8 @@ public class Bot extends Player {
         }
     }
 
-    @Override
-    public void setShips() {
-        for (Ships ship : ships) {
-            boolean flag;
-            Random rnd = new Random();
-            do {
-                int x = rnd.nextInt(10) + 1;
-                int y = rnd.nextInt(10) + 1;
-                boolean isVertical = rnd.nextBoolean();
-                flag = sea.setShip(ship, y, x, isVertical);
-            } while (!flag);
-        }
-        sea.initPoints();
-        sea.showForOwner();
+    public void setShips(){
+        setRandomShips();
     }
 
     @Override
@@ -50,6 +39,8 @@ public class Bot extends Player {
             }
 
             if (this.success.size() > 0 && this.theory.size() == 0) {
+                xy xy1;
+                xy xy2;
                 switch (this.success.size()) {
                     case 1:
                         xy sxy = (xy) this.success.peek();
@@ -60,8 +51,8 @@ public class Bot extends Player {
                         break;
 
                     case 2:
-                        xy xy1 = (xy) this.success.pop();
-                        xy xy2 = (xy) this.success.pop();
+                        xy1 = (xy) this.success.pop();
+                        xy2 = (xy) this.success.pop();
                         if (xy1.x == xy2.x) {
                             if (xy1.y > xy2.y) {
                                 this.theory.push(new xy(xy1.x, xy2.y - 1));
@@ -84,8 +75,8 @@ public class Bot extends Player {
                         break;
 
                     case 3:
-                        xy xy1 = (xy) this.success.pop();
-                        xy xy2 = (xy) this.success.pop();
+                        xy1 = (xy) this.success.pop();
+                        xy2 = (xy) this.success.pop();
                         xy xy3 = (xy) this.success.pop();
 
                         if (xy1.x == xy2.x && xy1.x == xy3.x) {
@@ -114,18 +105,31 @@ public class Bot extends Player {
                                 }
                             }
                         } else {
-                            if (xy1.x > xy2.x && xy1.x > xy3.x){
-                                this.theory.push(new xy(xy1.x +1, xy1.y));
-                                if(xy2.x>xy3.x){
-                                    this.theory.push(new xy(xy1.x +1, xy1.y));
-                                }else{
+                            if (xy1.x > xy2.x && xy1.x > xy3.x) {
+                                this.theory.push(new xy(xy1.x + 1, xy1.y));
+                                if (xy2.x > xy3.x) {
+                                    this.theory.push(new xy(xy3.x - 1, xy1.y));
+                                } else {
+                                    this.theory.push(new xy(xy2.x - 1, xy1.y));
+                                }
+                            } else {
+                                if (xy2.x > xy1.x && xy2.x > xy3.x) {
+                                    this.theory.push(new xy(xy2.x + 1, xy1.y));
+                                    if (xy1.x > xy3.x) {
+                                        this.theory.push(new xy(xy3.x - 1, xy1.y));
+                                    } else {
+                                        this.theory.push(new xy(xy1.x - 1, xy1.y));
+                                    }
+                                } else {
+                                    this.theory.push(new xy(xy3.x + 1, xy1.y));
+                                    if (xy1.x > xy2.x) {
+                                        this.theory.push(new xy(xy2.x - 1, xy1.y));
+                                    } else {
+                                        this.theory.push(new xy(xy1.x - 1, xy1.y));
+                                    }
 
                                 }
-
-                            }else{
-
                             }
-
                         }
 
                         this.success.push(xy1);

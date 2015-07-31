@@ -1,11 +1,13 @@
 package com.company;
 
+import java.io.Serializable;
+
 /**
  * Conrain two statement
  * 1 - simple point
  * 2 - piece of ship
  */
-public class Point {
+public class Point implements Serializable {
     private boolean health = true;
     public Ships parent;
     private int numberPiece;
@@ -22,7 +24,7 @@ public class Point {
     /**
      * The contain 4 statement
      * Return statement was before action
-     *
+     * <p/>
      * 1 - full health and it piece of ship
      * 2 - destroyed (health=false) and it piece of ship
      * <p/>
@@ -36,14 +38,14 @@ public class Point {
                 this.health = false;
                 sea.mHealth();
                 parent.hit();
-                if(!parent.check()){
+                if (!parent.check()) {
                     return 5;
                 }
                 return 1;
             } else {
                 if (parent.check()) {
                     return 2;
-                }else {
+                } else {
                     return 5;
                 }
             }
@@ -70,7 +72,7 @@ public class Point {
             } else {
                 if (parent.check()) {
                     return 2;
-                }else {
+                } else {
                     return 5;
                 }
             }
