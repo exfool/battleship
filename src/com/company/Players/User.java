@@ -1,8 +1,12 @@
 package com.company.Players;
 
+import com.company.GameController;
 import com.company.Log;
 import com.company.Ships;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Scanner;
 
@@ -43,20 +47,19 @@ public class User extends Player implements Serializable {
         sea.initPoints();
     }
 
-    private int inputWithSave() {
+    private int inputWithSave() throws IOException, ClassNotFoundException {
         Scanner in = new Scanner(System.in);
-        String so = in.nextLine();
-        if (so == "save") {
-            System.out.println("Game is saved");
-            return -1;
+        String so = in.next();
+        if ( so.equals("save")) {
+            GameController.save();
         }
         return Integer.valueOf(so);
     }
 
-    public boolean move(Player who) {
+    public boolean move(Player who) throws IOException, ClassNotFoundException {
         do {
             Log.set("Sea of 1 player");
-            who.sea.showForEnemy();
+            who.sea.showForOwner();
             System.out.println("Enter X:");
             int x = inputWithSave();
             System.out.println("Enter Y:");

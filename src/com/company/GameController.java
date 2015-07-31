@@ -4,7 +4,7 @@ import com.company.Players.Bot;
 import com.company.Players.Player;
 import com.company.Players.User;
 
-import java.io.Serializable;
+import java.io.*;
 import java.util.Scanner;
 
 /**
@@ -22,55 +22,83 @@ public class GameController implements Serializable {
         return uniqId++;
     }
 
-    private GameController() {
+    private GameController() throws IOException, ClassNotFoundException {
         this.player1 = null;
         this.player2 = null;
         this.who = null;
         this.steps = 0;
         Scanner in = new Scanner(System.in);
         Log.set("1 - new game");
-        Log.set("2 - continue game");
+        Log.set("2 - exit");
         switch (in.nextInt()) {
             case 1:
                 Log.set("");
                 Log.set("1 - bot vs bot");
-                Log.set("1 - bot vs you");
-                switch (in.nextInt()) {
-                    case 1:
-                        this.player1 = new Bot();
-                        this.player2 = new Bot();
-                        this.who = this.player1;
-                        this.player1.setShips();
+                Log.set("2 - bot vs you");
+                if (in.nextInt() == 1) {
+                    this.player1 = new Bot();
+                    this.player2 = new Bot();
+                    this.who = this.player1;
+                    this.player1.setShips();
+                    this.player2.setShips();
+                } else {
+                    this.player1 = new Bot();
+                    this.player2 = new User();
+                    this.player1.setShips();
+                    Log.set("Do you want automaticly set ship (1 - yes, 2 - no) ?");
+                    if (in.nextInt() == 1) {
+                        this.player2.setRandomShips();
+                    } else {
                         this.player2.setShips();
-                        break;
-                    case 2:
-                        this.player1 = new Bot();
-                        this.player2 = new User();
-                        this.player1.setShips();
-                        Log.set("Do you want automaticly set ship (1 - yes, 2 - no) ?");
-                        if (in.nextInt() == 1) {
-                            this.player2.setRandomShips();
-                        } else {
-                            this.player2.setShips();
-                        }
-                        break;
+                    }
                 }
                 who = this.player1;
                 break;
             case 2:
+                System.exit(0);
                 break;
         }
-        start();
     }
 
-    public static GameController getInstance() {
-        if (instance == null) {
-            instance = new GameController();
+    public static GameController getInstance() throws IOException, ClassNotFoundException {
+        Scanner in = new Scanner(System.in);
+        System.out.printf("Do you want continue game ? ( 1 - yes, 2 - no )");
+        if (in.nextInt() == 1) {
+            recovery();
+        }else {
+            if (GameController.instance == null) {
+                GameController.instance = new GameController();
+            }
         }
-        return instance;
+
+        return GameController.instance;
     }
 
-    public void start() {
+    public static GameController recovery() throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream("save.out");
+        ObjectInputStream oin = new ObjectInputStream(fis);
+        GameController.instance = (GameController) oin.readObject();
+        fis.close();
+        oin.close();
+        return GameController.instance;
+    }
+
+    public static void save() throws IOException, ClassNotFoundException {
+        if (GameController.instance == null) {
+            Log.set("You don't have instance.");
+        } else {
+            FileOutputStream fos = new FileOutputStream("save.out");
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(GameController.instance);
+            oos.flush();
+            fos.close();
+            oos.close();
+            Log.set("Game is saved");
+            System.exit(0);
+        }
+    }
+
+    public void start() throws IOException, ClassNotFoundException {
         while (true) {
             if (!chagnePlayer().sea.checkHealth() || !this.who.sea.checkHealth()) {
                 finish();
@@ -91,7 +119,7 @@ public class GameController implements Serializable {
         }
     }
 
-    private void finish() {
+    private void finish() throws IOException, ClassNotFoundException {
         Log.set("");
         Log.set("Sea of first player");
         player1.sea.showForOwner();
@@ -113,6 +141,7 @@ public class GameController implements Serializable {
         switch (in.nextInt()) {
             case 1:
                 GameController.instance = new GameController();
+                start();
                 break;
             case 2:
                 Log.set("Thank you");

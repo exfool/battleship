@@ -162,6 +162,15 @@ public class Sea implements Serializable {
         return xy[x][y].hit(this);
     }
 
+    public int check(int x, int y) {
+        // out of range sea
+        if (x > 11 || y > 11 || x < 1 || y < 1) {
+            return -1;
+        }
+
+        return xy[x][y].check();
+    }
+
     public void showForOwner() {
         System.out.println("   1 2 3 4 5 6 7 8 9 10");
         for (int i = 1; i < 11; i++) {

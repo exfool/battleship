@@ -3,12 +3,10 @@ package com.company.Players;
 import com.company.Sea;
 import com.company.Ships;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Random;
 
-/**
- * Created by exfool on 28.07.15.
- */
 public abstract class Player implements Serializable {
     protected Ships[] ships;
     public Sea sea;
@@ -17,7 +15,7 @@ public abstract class Player implements Serializable {
         this.sea = new Sea();
         generateShips();
     }
-    public void setShips(){};
+    public void setShips(){}
         public void setRandomShips() {
         for (Ships ship : ships) {
             boolean flag;
@@ -35,7 +33,7 @@ public abstract class Player implements Serializable {
     /**
      * Step in game
      */
-    public abstract boolean move(Player who);
+    public abstract boolean move(Player who) throws IOException, ClassNotFoundException;
 
 
     public Ships[] getShips() {
